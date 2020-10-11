@@ -25,5 +25,6 @@ html, body {
   padding: 20px;
 }
 .info, .info a {
+  font-family: Arial, Helvetica, sans-serif;
   color:  #f1efe4;
 }
