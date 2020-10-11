@@ -1,3 +1,4 @@
+import { randomStar } from "./Assets.js";
 import { StarAnimOption } from "./StarAnimOption.js";
 import { StarOption } from "./StarOption.js";
 
@@ -36,7 +37,7 @@ export class StarNode {
     style.top = "0";
     style.width = `${option.size}px`;
     style.height = `${option.size}px`;
-    style.backgroundImage = "url(/src/assets/star.svg)";
+    style.backgroundImage = `url(${randomStar()})`;
     style.visibility = "hidden";
     style.backgroundRepeat = "no-repeat";
   }
@@ -87,7 +88,7 @@ export class StarNode {
 
     /// 重力（縦方向）のアニメーション ///
     /// 外側のラッパーオブジェクトを重力方向にアニメーションさせる ///
-    const G = 900;
+    const G = 1000;
     // アニメーション期間で最終的に到達するY位置を求める
     const totalG = (option.duration / 1000) * G / 2;
     // キーフレーム1

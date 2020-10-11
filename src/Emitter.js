@@ -30,7 +30,7 @@ export class Emitter {
           this.parent,
           new StarOption(
             origin,
-            randomWithin(15, 40)
+            randomWithin(15, 60)
           ),
           new StarAnimOption(
             this.duration + randomWithin(-500, 500),
