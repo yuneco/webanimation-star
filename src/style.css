@@ -16,3 +16,13 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+
+.info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+}
+.info, .info a {
+  color:  #f1efe4;
+}
