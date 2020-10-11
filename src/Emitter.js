@@ -36,7 +36,7 @@ export class Emitter {
             this.duration + randomWithin(-500, 500),
             this.vec,
             randomWithin(0, 0),
-            randomWithin(-720, 720),
+            randomWithin(-1800, 1800),
             1)
         );
       }
