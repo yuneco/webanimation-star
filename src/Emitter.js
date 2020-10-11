@@ -4,6 +4,8 @@ import { StarAnimOption } from "./StarAnimOption.js";
 import {emitStar} from "./StarNode.js";
 import { StarOption } from "./StarOption.js";
 
+const MAX_EMIT_ATONCE = 4;
+
 export class Emitter {
   constructor (parent) {
     this._timer = null;
@@ -24,7 +26,7 @@ export class Emitter {
     this._timer = setTimeout(() => {
       const origin = randomPos(this.pos.clone(), 40);
       const actualInterval = Date.now() - this._lastTime;
-      const count = Math.max(1, Math.round(actualInterval / interval));
+      const count = Math.min(MAX_EMIT_ATONCE, Math.max(1, Math.round(actualInterval / interval)));
       for (let i = 0; i < count; i++) {
         emitStar(
           this.parent,
