@@ -1,4 +1,4 @@
-const randomFrom = arr => arr[Math.floor(arr.length * Math.random())];
+import { randomFrom } from "./Random.js";
 
 export const randomStar = () => {
   const normals = [1, 4, 7, 10, 13, 16];

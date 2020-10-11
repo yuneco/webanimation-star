@@ -4,9 +4,15 @@ html, body {
   box-sizing: border-box;
   height: 100%;
 }
+.bglines {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-image: linear-gradient(to top, rgba(89,55,110,1) 0%, rgba(56,25,103,1) 28%, rgba(32,42,74,1) 100%);
+}
 .stage {
   position: relative;
   height: 100%;
-  background-color: #330066;
   overflow: hidden;
 }
