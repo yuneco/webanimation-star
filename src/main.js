@@ -26,8 +26,12 @@ const initStage = () => {
   emitter.pos = new Point(root.clientWidth / 2, root.clientHeight / 2);
   emitter.vec.setLengthAndAngle(1300, -90);
   emitter.nps = isLargeScreen ? 25 : 15;
-  root.addEventListener("pointermove", ev => {
+  root.addEventListener("mousemove", ev => {
     emitter.pos = new Point(ev.clientX, ev.clientY);
+  });
+  root.addEventListener("touchmove", ev => {
+    const tc = ev.touches[0];
+    emitter.pos = new Point(tc.clientX, tc.clientY);
   });
   emitter.start();
 }
