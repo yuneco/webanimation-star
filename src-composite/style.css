@@ -5,6 +5,9 @@ html, body {
   height: 100%;
   background-color: #330066;
 }
+body {
+  padding: 20px;
+}
 .stage {
   position: relative;
   height: 100%;
@@ -40,6 +43,5 @@ html, body {
 }
 h1 {
   font-size: 16px;
-  padding: 4px 16px;
   color: white;
 }

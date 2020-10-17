@@ -149,7 +149,7 @@ const initStage = () => {
   box.appendChild(el3);
   box.appendChild(el4);
 
-  box.addEventListener("click", async (ev) => {
+  document.querySelector("#run").addEventListener("click", async (ev) => {
     animateLinear(el1);
     animateOut(el2);
     animateYOut(el3);
