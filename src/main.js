@@ -33,6 +33,10 @@ const initStage = () => {
     const tc = ev.touches[0];
     emitter.pos = new Point(tc.clientX, tc.clientY);
   });
+  document.addEventListener("visibilitychange", (ev) => {
+    console.log(document.visibilityState);
+    emitter[document.visibilityState === "hidden" ? "stop" : "start"]();
+  })
   emitter.start();
 }
 

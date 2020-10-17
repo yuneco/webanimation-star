@@ -15,7 +15,28 @@ export class StarNode {
     this._anims = [];
     parent.appendChild(this._elWrapper);
     this._elWrapper.appendChild(this._el);
-    this.reset(option);
+    this._initStyle();
+    this._option = option;
+  }
+
+  _initStyle () {
+    const styleWrapper = this._elWrapper.style;
+    styleWrapper.position = "absolute";
+    styleWrapper.left = "0";
+    styleWrapper.top = "0";
+    styleWrapper.willChange = "transform";
+
+    const style = this._el.style;
+    style.position = "absolute";
+    style.left = "0";
+    style.top = "0";
+    style.width = "100px"
+    style.height = "100px"
+    style.backgroundImage = `url(${randomStar()})`;
+    style.visibility = "hidden";
+    style.backgroundRepeat = "no-repeat";
+    style.willChange = "transform";
+
   }
 
   /**
@@ -25,21 +46,9 @@ export class StarNode {
    */
   reset (option = new StarOption()) {
     this._anims.forEach(anim => anim.cancel());
+    //this._el.style.backgroundImage = `url(${randomStar()})`;
+    this._option = option;
 
-    const styleWrapper = this._elWrapper.style;
-    styleWrapper.position = "absolute";
-    styleWrapper.left = `${option.pos.x}px`;
-    styleWrapper.top = `${option.pos.y}px`;
-
-    const style = this._el.style;
-    style.position = "absolute";
-    style.left = "0";
-    style.top = "0";
-    style.width = `${option.size}px`;
-    style.height = `${option.size}px`;
-    style.backgroundImage = `url(${randomStar()})`;
-    style.visibility = "hidden";
-    style.backgroundRepeat = "no-repeat";
   }
 
   /**
@@ -47,13 +56,16 @@ export class StarNode {
    * @param {StarAnimOption} option アニメーションの設定
    */
   async emit (option = new StarAnimOption()) {
+    const basePos = this._option.pos;
+    const baseScale = this._option.size / 100;
+
     /// 本体のアニメーション（設定に基づく方向・速度のアニメーション） ///
     // キーフレーム1
     const init = {
       visibility: "visible",
       opacity: 1,
       transform: `
-        translate(0px, 0px) 
+        translate(${basePos.x}px, ${basePos.y}px) 
         scale(0) 
         rotate(${option.angle * -0.3}deg)
       `
@@ -64,8 +76,8 @@ export class StarNode {
       visibility: "visible",
       opacity: 1,
       transform: `
-        translate(${option.vec.x * fromOffset}px, ${option.vec.y * fromOffset}px) 
-        scale(1) 
+        translate(${option.vec.x * fromOffset + basePos.x}px, ${option.vec.y * fromOffset + basePos.y}px) 
+        scale(${baseScale}) 
         rotate(0deg)
       `,
       offset: fromOffset
@@ -75,8 +87,8 @@ export class StarNode {
       visibility: "hidden",
       opacity: option.alpha,
       transform: `
-        translate(${option.vec.x}px, ${option.vec.y}px) 
-        scale(${option.scale}) 
+        translate(${option.vec.x + basePos.x}px, ${option.vec.y + basePos.y}px) 
+        scale(${option.scale * baseScale}) 
         rotate(${option.angle}deg)
       `
     };
@@ -113,6 +125,8 @@ export class StarNode {
     await anim.finished;
     // 実行中のアニメーション配列をクリア
     this._anims = [];
+    // this._elWrapper.style.willChange = "auto";
+    // this._el.style.willChange = "auto";
   }
 }
 
