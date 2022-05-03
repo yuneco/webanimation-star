@@ -1,4 +1,4 @@
-import { Point } from "./Point.js";
+import { Point } from "../utils/Point";
 
 export type StarOption = {
   /** 基準位置の座標 */
@@ -16,7 +16,7 @@ export type StarOption = {
  * @param color 色（CSS色表現）
  */
 export const createStarOption = (pos: Point, size = 10, color = "#ffff00"): StarOption => ({
-  pos: pos.clone(),
+  pos: pos,
   size: size,
   color: color,
 });

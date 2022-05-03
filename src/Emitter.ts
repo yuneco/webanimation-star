@@ -1,64 +1,57 @@
-import { Point } from "./Point";
-import { randomPos, randomWithin } from "./Random";
-import { createStarAnimOption } from "./StarAnimOption";
-import {emitStar} from "./StarNode";
-import { createStarOption } from "./StarOption";
+import { point, Point } from "./utils/Point";
+import { randomPos, randomWithin } from "./utils/Random";
+import { createStarAnimOption } from "./node/StarAnimOption";
+import { emitStar } from "./node/StarNode";
+import { createStarOption } from "./node/StarOption";
+import { Timer } from "./utils/Timer";
 
 const MAX_EMIT_ATONCE = 4;
 
+/** 単一のノードを射出します。パラメータは一定の幅でランダムに設定されます */
+const emit = (parent: HTMLElement, pos: Point, dur: number, vec: Point) => {
+  emitStar(
+    parent,
+    createStarOption(randomPos(pos, 40), randomWithin(15, 60)),
+    createStarAnimOption(
+      dur,
+      vec,
+      randomWithin(0, 0),
+      randomWithin(-1800, 1800),
+      1
+    )
+  );
+};
+
 export class Emitter {
-  private _timer: number | undefined;
-  private _lastTime: number;
+  private timer = new Timer();
   private parent: HTMLElement;
-  nps: number;
-  pos: Point;
-  vec: Point;
-  private duration: number;
 
-  constructor (parent: HTMLElement) {
-    this._timer = undefined;
-    this._lastTime = 0;
+  /** node / sec */
+  nps = 10;
+  /** 射出元座標 */
+  pos = point();
+  /** 角度 */
+  vec = point(100, 100);
+  /** 生存時間(ms) */
+  duration = 3000;
+
+  constructor(parent: HTMLElement) {
     this.parent = parent;
-    this.nps = 10;
-    this.pos = new Point(),
-    this.vec = new Point(100, 100),
-    this.duration = 3000;
+    this.timer.onrun = (delay) => this.emit(delay);
   }
 
-  start () {
-    if (this._timer) { return; }
-    const interval = 1000 / this.nps;
-    this._timer = setInterval(() => {
-      this._onEmit()
-    }, interval);
+  start() {
+    this.timer.start(this.nps);
   }
 
-  _onEmit () {
-    const interval = 1000 / this.nps;
-    const actualInterval = Date.now() - this._lastTime;
-    this._lastTime = Date.now();
+  stop() {
+    this.timer.stop();
+  }
 
-    const count = Math.min(MAX_EMIT_ATONCE, Math.max(1, Math.round(actualInterval / interval)));
-    const origin = randomPos(this.pos.clone(), 40);
+  private emit(delay = 1) {
+    const count = Math.min(MAX_EMIT_ATONCE, Math.max(1, Math.round(delay)));
     for (let i = 0; i < count; i++) {
-      emitStar(
-        this.parent,
-        createStarOption(
-          origin,
-          randomWithin(15, 60)
-        ),
-        createStarAnimOption(
-          this.duration, // + randomWithin(-500, 500),
-          this.vec,
-          randomWithin(0, 0),
-          randomWithin(-1800, 1800),
-          1)
-      );
+      emit(this.parent, this.pos, this.duration, this.vec);
     }
-  }
-
-  stop () {
-    clearTimeout(this._timer);
-    this._timer = undefined;
   }
 }

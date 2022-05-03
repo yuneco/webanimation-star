@@ -1,6 +1,6 @@
 import { Emitter } from "./Emitter.js";
 import { createLines } from "./LineBg.js";
-import { Point } from "./Point.js";
+import { point, pointWithlengthAndAngle } from "./utils/Point.js";
 
 /**
  * 適当な背景を生成します
@@ -19,17 +19,17 @@ const initStage = () => {
   if (!root) return;
   const emitter = new Emitter(root);
   const isLargeScreen = root.clientWidth > 500;
-  emitter.pos = new Point(root.clientWidth / 2, root.clientHeight / 2);
-  emitter.vec.setLengthAndAngle(1300, -90);
+  emitter.pos = point(root.clientWidth / 2, root.clientHeight / 2);
+  emitter.vec = pointWithlengthAndAngle(1300, -90);
   emitter.nps = isLargeScreen ? 25 : 15;
   root.addEventListener("mousemove", (ev) => {
-    emitter.pos = new Point(ev.clientX, ev.clientY);
+    emitter.pos = point(ev.clientX, ev.clientY);
   });
   root.addEventListener("touchmove", (ev) => {
     const tc = ev.touches[0];
-    emitter.pos = new Point(tc.clientX, tc.clientY);
+    emitter.pos = point(tc.clientX, tc.clientY);
   });
-  document.addEventListener("visibilitychange", (ev) => {
+  document.addEventListener("visibilitychange", () => {
     console.log(document.visibilityState);
     emitter[document.visibilityState === "hidden" ? "stop" : "start"]();
   });

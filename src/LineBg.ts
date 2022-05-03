@@ -1,4 +1,4 @@
-import { randomWithin, randomFrom } from "./Random.js";
+import { randomWithin, randomFrom } from "./utils/Random.js";
 
 /**
  * 指定の要素に背景を生成します

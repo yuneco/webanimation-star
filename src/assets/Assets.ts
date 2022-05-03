@@ -1,4 +1,4 @@
-import { randomFrom } from "./Random.js";
+import { randomFrom } from "../utils/Random.js";
 
 export const randomStar = () => {
   const normals = [1, 4, 7, 10, 13, 16];
