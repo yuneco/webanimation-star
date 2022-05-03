@@ -1,7 +1,9 @@
-const a2r = a => a / 180 * Math.PI;
-const r2a = r => r / Math.PI * 180;
+const a2r = (a: number) => a / 180 * Math.PI;
+const r2a = (r: number) => r / Math.PI * 180;
 
 export class Point {
+  private _x: number;
+  private _y: number;
   constructor (x = 0, y = 0) {
     this._x = x;
     this._y = y;
@@ -24,7 +26,7 @@ export class Point {
     return r2a(rad);
   }
 
-  setLengthAndAngle (l, a) {
+  setLengthAndAngle (l: number, a: number) {
     const rad = a2r(a);
     this.x = Math.cos(rad) * l;
     this.y = Math.sin(rad) * l;

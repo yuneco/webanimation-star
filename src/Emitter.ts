@@ -1,14 +1,22 @@
-import { Point } from "./Point.js";
-import { randomPos, randomWithin } from "./Random.js";
-import { StarAnimOption } from "./StarAnimOption.js";
-import {emitStar} from "./StarNode.js";
-import { StarOption } from "./StarOption.js";
+import { Point } from "./Point";
+import { randomPos, randomWithin } from "./Random";
+import { createStarAnimOption } from "./StarAnimOption";
+import {emitStar} from "./StarNode";
+import { createStarOption } from "./StarOption";
 
 const MAX_EMIT_ATONCE = 4;
 
 export class Emitter {
-  constructor (parent) {
-    this._timer = null;
+  private _timer: number | undefined;
+  private _lastTime: number;
+  private parent: HTMLElement;
+  nps: number;
+  pos: Point;
+  vec: Point;
+  private duration: number;
+
+  constructor (parent: HTMLElement) {
+    this._timer = undefined;
     this._lastTime = 0;
     this.parent = parent;
     this.nps = 10;
@@ -35,12 +43,12 @@ export class Emitter {
     for (let i = 0; i < count; i++) {
       emitStar(
         this.parent,
-        new StarOption(
+        createStarOption(
           origin,
           randomWithin(15, 60)
         ),
-        new StarAnimOption(
-          this.duration + randomWithin(-500, 500),
+        createStarAnimOption(
+          this.duration, // + randomWithin(-500, 500),
           this.vec,
           randomWithin(0, 0),
           randomWithin(-1800, 1800),
@@ -51,6 +59,6 @@ export class Emitter {
 
   stop () {
     clearTimeout(this._timer);
-    this._timer = null;
+    this._timer = undefined;
   }
 }
