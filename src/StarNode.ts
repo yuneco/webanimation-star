@@ -1,4 +1,5 @@
 import { randomStar } from "./Assets";
+import { loadImgToBackground } from "./loadImg";
 import { StarAnimOption } from "./StarAnimOption";
 import { StarOption } from "./StarOption";
 
@@ -35,12 +36,11 @@ export class StarNode {
     style.top = "0";
     style.width = "100px";
     style.height = "100px";
-    style.backgroundImage = `url(${randomStar()})`;
-    //style.backgroundImage = "url(src/assets/star00.png)";
     style.imageRendering = "pixelated";
     style.visibility = "hidden";
     style.backgroundRepeat = "no-repeat";
     style.willChange = "transform";
+    loadImgToBackground(this._el, randomStar())
   }
 
   /**
@@ -50,7 +50,6 @@ export class StarNode {
    */
   reset(option: StarOption) {
     this._anims.forEach((anim) => anim.cancel());
-    //this._el.style.backgroundImage = `url(${randomStar()})`;
     this._option = option;
   }
 
