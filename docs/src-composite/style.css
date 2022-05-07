@@ -1,0 +1,47 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+  background-color: #330066;
+}
+body {
+  padding: 20px;
+}
+.stage {
+  position: relative;
+  height: 100%;
+}
+
+.legend {
+  position: absolute;
+  left: 280px;
+  top: 150px;
+}
+.legend .item1 {
+  color: gold;
+}
+.legend .item2 {
+  color: salmon;
+}
+.legend .item3 {
+  color: powderblue;
+}
+.legend .item4 {
+  color: thistle;
+}
+.legend .item::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  border-radius: 4px;
+}
+.legend .item .label {
+  color: white;
+}
+h1 {
+  font-size: 16px;
+  color: white;
+}

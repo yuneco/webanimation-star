@@ -7,8 +7,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsc && vite build && yarn copy-statics",
+    "preview": "vite preview",
+    "copy-statics": "cp -R composite.html src-composite docs/"
   },
   "devDependencies": {
     "typescript": "^4.6.4",
