@@ -1,7 +1,10 @@
-import "./style.css";
-import { Emitter } from "./Emitter.js";
+import "./style.scss";
+import { Emitter } from "./emitter/Emitter.js";
 import { createLines } from "./LineBg.js";
 import { point, pointWithlengthAndAngle } from "./utils/Point.js";
+
+const STAGE_SELECTOR = ".stage";
+const emitter = new Emitter(STAGE_SELECTOR);
 
 /**
  * 適当な背景を生成します
@@ -12,13 +15,33 @@ const initBg = () => {
   createLines(bg, ["#131c38", "#201a33", "#23285e", "#1d1c47", "#2e1657"], 20);
 };
 
+const initStatus = () => {
+  const updateStatus = () => {
+    const el = document.querySelector(".status") as HTMLElement;
+    if (!el) return;
+    const divCount = document.querySelectorAll(`${STAGE_SELECTOR} div`).length;
+    el.textContent = `${divCount} elements`;
+  };
+
+  setInterval(updateStatus, 1000);
+};
+
+const initControl = () => {
+  const modeSelect = document.querySelector("#mode") as HTMLSelectElement;
+  modeSelect.addEventListener("change", () => {
+    const mode = modeSelect.value;
+    if (mode === "composite" || mode === "wrapper") {
+      emitter.mode = mode;
+    }
+  });
+};
+
 /**
  * パーティクルを初期化します
  */
 const initStage = () => {
-  const root = document.querySelector(".stage") as HTMLElement;
+  const root = document.querySelector(STAGE_SELECTOR) as HTMLElement;
   if (!root) return;
-  const emitter = new Emitter(root);
   const isLargeScreen = root.clientWidth > 500;
   emitter.pos = point(root.clientWidth / 2, root.clientHeight / 2);
   emitter.vec = pointWithlengthAndAngle(1300, -90);
@@ -38,4 +61,6 @@ const initStage = () => {
 };
 
 initBg();
+initControl();
 initStage();
+initStatus();

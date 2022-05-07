@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=420, initial-scale=1.0">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/obsidian.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <title>Document</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      touch-action: manipulation;
+    }
+
+    ul.note {
+      font-size: 0.8em;
+      color: #666;
+    }
+
+    code {
+      border-radius: 4px;
+    }
+
+    summary {
+      cursor: pointer;
+    }
+
+    pre {
+      margin: 0;
+    }
+
+    .stage {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      padding-left: 100px;
+      padding-top: 100px;
+      border: 1px solid gray;
+      border-radius: 4px;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .tama {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background-image: url(static/tama.svg);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: rgb(255, 247, 209);
+      border-radius: 8px;
+      cursor: pointer;
+      /* 常時回転 */
+      animation: rotate 4s infinite linear;
+    }
+
+    .tama::after {
+      content: 'CLICK ME!';
+      width: 100%;
+      display: block;
+      position: relative;
+      text-align: center;
+      top: 72%;
+    }
+
+    .zoomWrapper {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Web Animations APIのcompositeがすごいよ！のページ</h1>
+  <p>
+    by: <a href="https://twitter.com/yuneco">@yuneco</a><br />
+    もうちょっと複雑な作例を見たい方：<a href="https://yuneco.github.io/webanimation-star/">従来の方法と新しい方法の両方でパーティクルアニメーションを実装した例</a>
+  </p>
+
+  <section class="code-sample">
+    <h2>何も考慮しない場合</h2>
+    <ul class="note">
+      <li>キャラクター（たまさん）はCSS Animationで常時回転しています</li>
+      <li>クリックするとJavaScriptでズームアニメーションを実行します</li>
+      <li>クリックすると回転状態が解除されてしまうのがイケてないですね🙅‍♀️</li>
+      <li>ズームアニメーションにはWeb Animations APIを使用していますが、より古典的にCSSのクラスを設定/削除する方法でも結果は変わりません</li>
+    </ul>
+    <div class="stage" id="stage1">
+      <div class="tama"></div>
+    </div>
+
+    <script>
+      const tama1 = document.querySelector('#stage1 .tama');
+      const zoomTama1 = () => {
+        tama1.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.5)' },
+          { transform: 'scale(1)' }
+        ], { duration: 1500 })
+      };
+      tama1.addEventListener('pointerdown', zoomTama1);
+    </script>
+  </section>
+
+  <section class="code-sample">
+    <h2>ラッパーを使う場合（従来の方法）</h2>
+    <ul class="note">
+      <li>「何も考慮しない場合」の問題を解決する従来の方法です</li>
+      <li>やり方はいくつかありますが、ラッパー要素を作って回転とズームを分けるのが基本</li>
+      <li>アニメーションのせいでDOMの構造が変わっちゃうのがイケてないですね🙅‍♀️</li>
+      <li>アニメーションが複雑になるとさらにラッパー要素が増えていく辛み😢</li>
+    </ul>
+
+    <div class="stage" id="stage2">
+      <!-- ズーム用のラッパーdivを作る -->
+      <div class="zoomWrapper">
+        <div class="tama"></div>
+      </div>
+    </div>
+
+    <script>
+      // 追加したラッパー要素に対してズームを実行
+      const tama2wrapper = document.querySelector('#stage2 .zoomWrapper');
+      const zoomTama2 = () => {
+        tama2wrapper.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.5)' },
+          { transform: 'scale(1)' }
+        ], { duration: 1500 })
+      };
+      tama2wrapper.addEventListener('pointerdown', zoomTama2);
+    </script>
+  </section>
+
+  <section class="code-sample">
+    <h2>compositeを使う（新しい方法）</h2>
+    <ul class="note">
+      <li>ラッパー要素を使わない（比較的）新しい方法です</li>
+      <li>Web Animations APIのcompositionを使ってアニメーションの「重ね掛け」を行います</li>
+      <li>複雑なアニメーションを組み合わせてもDOMはクリーンでいいですね😸</li>
+      <li>Chrome, FireFoxではすでに使えます。SafariはTP 142で使えるようになりました🎉</li>
+    </ul>
+
+    <div class="stage" id="stage3">
+      <div class="tama"></div>
+    </div>
+
+    <script>
+      const tama3 = document.querySelector('#stage3 .tama');
+      const zoomTama3 = () => {
+        tama3.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.5)' },
+          { transform: 'scale(1)' }
+        ], { duration: 1500, composite: 'accumulate' })
+      };
+      tama3.addEventListener('pointerdown', zoomTama3);
+    </script>
+  </section>
+
+  <section class="code-sample">
+    <h2>compositeを使う（新しい方法） + 連打できないように制御</h2>
+    <ul class="note">
+      <li>上の例だと連打するとどんどん大きくなってしまうので、ちょっと制御を入れた例です</li>
+      <li>Web Animations APIならPromiseでアニメーションの終了を検知できるので、この手の制御もとても簡単です👏</li>
+    </ul>
+
+    <div class="stage" id="stage4">
+      <div class="tama"></div>
+    </div>
+
+    <script>
+      const tama4 = document.querySelector('#stage4 .tama');
+      let isRunning = false;
+      const zoomTama4 = async () => {
+        if (isRunning) return;
+        isRunning = true;
+        await tama4.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.5)' },
+          { transform: 'scale(1)' }
+        ], { duration: 1500, composite: 'accumulate' }).finished
+        isRunning = false;
+      };
+      tama4.addEventListener('pointerdown', zoomTama4);
+    </script>
+  </section>
+
+  <script src="static/hilight.js" type="module"></script>
+</body>
+
+</html>
