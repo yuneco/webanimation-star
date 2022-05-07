@@ -1,16 +1,19 @@
-import { Point } from "../utils/Point";
-import { StarAnimOption } from "./StarAnimOption";
+import { StarAnimOption } from "../nodeBase/StarAnimOption";
+import { StarNodeWithWrapper } from "../nodeWithWrapper/StarNodeWithWrapper";
+import { StarNodeWithComposite } from "../nodeWithComposite/StarNodeWithComposite";
 
 const G = 1000;
 
-export const emitAnimate = (el: HTMLElement, elWrapper: HTMLElement, basePos: Point, baseScale: number, option: StarAnimOption) => {
-  /// 本体のアニメーション（設定に基づく方向・速度のアニメーション） ///
+const animateX = (
+  el: HTMLElement,
+  option: StarAnimOption
+) => {
   // キーフレーム1
   const init = {
     visibility: "visible",
     opacity: 1,
     transform: `
-      translate(${basePos.x}px, ${basePos.y}px) 
+      translate(${option.pos.x}px, ${option.pos.y}px) 
       scale(0) 
       rotate(${option.angle * -0.3}deg)
     `,
@@ -21,10 +24,10 @@ export const emitAnimate = (el: HTMLElement, elWrapper: HTMLElement, basePos: Po
     visibility: "visible",
     opacity: 1,
     transform: `
-      translate(${option.vec.x * fromOffset + basePos.x}px, ${
-      option.vec.y * fromOffset + basePos.y
+      translate(${option.vec.x * fromOffset + option.pos.x}px, ${
+      option.vec.y * fromOffset + option.pos.y
     }px) 
-      scale(${baseScale}) 
+      scale(${option.scale}) 
       rotate(0deg)
     `,
     offset: fromOffset,
@@ -34,17 +37,23 @@ export const emitAnimate = (el: HTMLElement, elWrapper: HTMLElement, basePos: Po
     visibility: "hidden",
     opacity: option.alpha,
     transform: `
-      translate(${option.vec.x + basePos.x}px, ${option.vec.y + basePos.y}px) 
-      scale(${option.scale * baseScale}) 
+      translate(${option.vec.x + option.pos.x}px, ${option.vec.y + option.pos.y}px) 
+      scale(0) 
       rotate(${option.angle}deg)
     `,
   };
   // キーフレーム1-3を使ってアニメーション
-  const anim = el.animate([init, from, to], {
+  return el.animate([init, from, to], {
     duration: option.duration,
     iterations: 1,
   });
+};
 
+const animateY = (
+  el: HTMLElement,
+  option: StarAnimOption,
+  composite: boolean
+) => {
   /// 重力（縦方向）のアニメーション ///
   /// 外側のラッパーオブジェクトを重力方向にアニメーションさせる ///
   // アニメーション期間で最終的に到達するY位置を求める
@@ -58,12 +67,23 @@ export const emitAnimate = (el: HTMLElement, elWrapper: HTMLElement, basePos: Po
     transform: `translateY(${totalG}px)`,
   };
   // キーフレーム1-2でアニメーション
-  const vAnim = elWrapper.animate([vFrom, vTo], {
+  return el.animate([vFrom, vTo], {
     duration: option.duration,
     iterations: 1,
     // 緩い放物線を描くようにイージングを設定する
     easing: "cubic-bezier(.37,.01,.96,.58)",
+    composite: composite ? "accumulate" : "replace",
   });
+};
 
-  return [anim, vAnim];
-}
+export const emitAnimate = (
+  node: StarNodeWithComposite | StarNodeWithWrapper,
+  option: StarAnimOption
+) => {
+  const animX = animateX(node.el, option);
+  const animY = node.hasWrapper
+    ? animateY(node.elWrapper, option, false)
+    : animateY(node.el, option, true);
+
+  return [animX, animY];
+};
