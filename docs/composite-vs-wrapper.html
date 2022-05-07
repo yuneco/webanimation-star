@@ -96,7 +96,7 @@
     もうちょっと複雑な作例を見たい方：<a href="https://yuneco.github.io/webanimation-star/">従来の方法と新しい方法の両方でパーティクルアニメーションを実装した例</a>
   </p>
 
-  <section class="code-sample">
+  <section class="code-sample" id="sample1">
     <h2>何も考慮しない場合</h2>
     <ul class="note">
       <li>キャラクター（たまさん）はCSS Animationで常時回転しています</li>
@@ -121,7 +121,7 @@
     </script>
   </section>
 
-  <section class="code-sample">
+  <section class="code-sample" id="sample2">
     <h2>ラッパーを使う場合（従来の方法）</h2>
     <ul class="note">
       <li>「何も考慮しない場合」の問題を解決する従来の方法です</li>
@@ -151,13 +151,13 @@
     </script>
   </section>
 
-  <section class="code-sample">
+  <section class="code-sample" id="sample3">
     <h2>compositeを使う（新しい方法）</h2>
     <ul class="note">
       <li>ラッパー要素を使わない（比較的）新しい方法です</li>
       <li>Web Animations APIのcompositionを使ってアニメーションの「重ね掛け」を行います</li>
       <li>複雑なアニメーションを組み合わせてもDOMはクリーンでいいですね😸</li>
-      <li>Chrome, FireFoxではすでに使えます。SafariはTP 142で使えるようになりました🎉</li>
+      <li>Chrome, FireFoxではすでに使えます。SafariはTP 142で使えるようになりました🎉（正式リリースはまだです。早よ）</li>
     </ul>
 
     <div class="stage" id="stage3">
@@ -172,12 +172,13 @@
           { transform: 'scale(1.5)' },
           { transform: 'scale(1)' }
         ], { duration: 1500, composite: 'accumulate' })
+        // composite: 'accumulate'を指定
       };
       tama3.addEventListener('pointerdown', zoomTama3);
     </script>
   </section>
 
-  <section class="code-sample">
+  <section class="code-sample" id="sample4">
     <h2>compositeを使う（新しい方法） + 連打できないように制御</h2>
     <ul class="note">
       <li>上の例だと連打するとどんどん大きくなってしまうので、ちょっと制御を入れた例です</li>
