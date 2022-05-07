@@ -1,3 +1,4 @@
+import "./style.css";
 import { Emitter } from "./Emitter.js";
 import { createLines } from "./LineBg.js";
 import { point, pointWithlengthAndAngle } from "./utils/Point.js";
